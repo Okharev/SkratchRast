@@ -1,0 +1,3 @@
+C:/Users/Okharev/CLionProjects/SkratchRast/build/CMakeFiles/TinyRaster.dir
+C:/Users/Okharev/CLionProjects/SkratchRast/build/CMakeFiles/edit_cache.dir
+C:/Users/Okharev/CLionProjects/SkratchRast/build/CMakeFiles/rebuild_cache.dir

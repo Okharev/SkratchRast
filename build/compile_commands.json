@@ -1,0 +1,8 @@
+[
+{
+  "directory": "C:/Users/Okharev/CLionProjects/SkratchRast/build",
+  "command": "C:\\msys64\\mingw64\\bin\\clang.exe -g -std=gnu23 -o CMakeFiles\\TinyRaster.dir\\main.c.obj -c C:\\Users\\Okharev\\CLionProjects\\SkratchRast\\main.c",
+  "file": "C:\\Users\\Okharev\\CLionProjects\\SkratchRast\\main.c",
+  "output": "CMakeFiles\\TinyRaster.dir\\main.c.obj"
+}
+]
