@@ -1,11 +1,6 @@
-cmake_minimum_required(VERSION 3.29)
+cmake_minimum_required(VERSION 3.31)
 project(TinyRaster C)
 
 set(CMAKE_C_STANDARD 23)
 
-file(GLOB TinyRaster
-     "*.h"
-     "*.c"
-)
-
-add_executable(TinyRaster ${TinyRaster})
+add_executable(TinyRaster main.c src/ppm.c src/memory/arena_allocator.c src/memory/heap_allocator.c)

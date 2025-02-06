@@ -4,5 +4,23 @@
   "command": "C:\\msys64\\mingw64\\bin\\clang.exe -g -std=gnu23 -o CMakeFiles\\TinyRaster.dir\\main.c.obj -c C:\\Users\\Okharev\\CLionProjects\\SkratchRast\\main.c",
   "file": "C:\\Users\\Okharev\\CLionProjects\\SkratchRast\\main.c",
   "output": "CMakeFiles\\TinyRaster.dir\\main.c.obj"
+},
+{
+  "directory": "C:/Users/Okharev/CLionProjects/SkratchRast/build",
+  "command": "C:\\msys64\\mingw64\\bin\\clang.exe -g -std=gnu23 -o CMakeFiles\\TinyRaster.dir\\src\\ppm.c.obj -c C:\\Users\\Okharev\\CLionProjects\\SkratchRast\\src\\ppm.c",
+  "file": "C:\\Users\\Okharev\\CLionProjects\\SkratchRast\\src\\ppm.c",
+  "output": "CMakeFiles\\TinyRaster.dir\\src\\ppm.c.obj"
+},
+{
+  "directory": "C:/Users/Okharev/CLionProjects/SkratchRast/build",
+  "command": "C:\\msys64\\mingw64\\bin\\clang.exe -g -std=gnu23 -o CMakeFiles\\TinyRaster.dir\\src\\memory\\arena_allocator.c.obj -c C:\\Users\\Okharev\\CLionProjects\\SkratchRast\\src\\memory\\arena_allocator.c",
+  "file": "C:\\Users\\Okharev\\CLionProjects\\SkratchRast\\src\\memory\\arena_allocator.c",
+  "output": "CMakeFiles\\TinyRaster.dir\\src\\memory\\arena_allocator.c.obj"
+},
+{
+  "directory": "C:/Users/Okharev/CLionProjects/SkratchRast/build",
+  "command": "C:\\msys64\\mingw64\\bin\\clang.exe -g -std=gnu23 -o CMakeFiles\\TinyRaster.dir\\src\\memory\\heap_allocator.c.obj -c C:\\Users\\Okharev\\CLionProjects\\SkratchRast\\src\\memory\\heap_allocator.c",
+  "file": "C:\\Users\\Okharev\\CLionProjects\\SkratchRast\\src\\memory\\heap_allocator.c",
+  "output": "CMakeFiles\\TinyRaster.dir\\src\\memory\\heap_allocator.c.obj"
 }
 ]

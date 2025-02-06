@@ -1,3 +1,0 @@
-C:/Users/Okharev/CLionProjects/SkratchRast/cmake-build-debug/CMakeFiles/TinyRaster.dir
-C:/Users/Okharev/CLionProjects/SkratchRast/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Okharev/CLionProjects/SkratchRast/cmake-build-debug/CMakeFiles/rebuild_cache.dir
