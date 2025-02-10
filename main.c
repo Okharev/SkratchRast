@@ -1,9 +1,11 @@
+#include <math.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "src/containers/dyn_arr.h"
+#include "src/helpers.h"
 #include "src/mat4f.h"
 #include "src/ppm.h"
 #include "src/vec3f.h"
@@ -17,9 +19,6 @@ typedef struct {
 
 DYN_ARR_TYPE(Line, Line)
 DYN_ARR_IMPL(Line, Line)
-
-DYN_ARR_TYPE(char, Char)
-DYN_ARR_IMPL(char, Char)
 
 int main(void) {
   // FILE* file_ptr;
@@ -49,13 +48,11 @@ int main(void) {
   //
   // fclose(file_ptr);
 
-  // ScaleRotationTranslation
-
-  Vec3f player = (Vec3f){1.0, 1.0, 1.0};
+  Vec3f player = (Vec3f){1.0f, 1.0f, 1.0f};
 
   Mat4f init = mat4f_identity();
 
-  Mat4f matRot = mat4f_rotateZ(-180.0);
+  Mat4f matRot = mat4f_rotateZ(PI_F / 2.0f);
 
   mat4f_print(&matRot);
 
