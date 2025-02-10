@@ -48,15 +48,12 @@ int main(void) {
   //
   // fclose(file_ptr);
 
-  Vec3f player = (Vec3f){1.0f, 1.0f, 1.0f};
+  Vec4f player = (Vec4f){ 1.0f, 1.0f, -5.0f, 1.0f };
+  Mat4f cam = mat4f_projection(90.0f, 1.0f, 10.0f, 1.0f);
 
-  Mat4f init = mat4f_identity();
+  Vec4f final = mat4f_apply_projection(&cam, &player);
 
-  Mat4f matRot = mat4f_rotateZ(PI_F / 2.0f);
-
-  mat4f_print(&matRot);
-
-  Vec4f res = mat4f_multiply_vec4f(&matRot, &(Vec4f){.x = player.x, .y = player.y, .z = player.z, .w = 1.0});
+  printf("%.2f, %.2f, %.2f, %.2f\n", final.x, final.y, final.z, final.w);
 
   return 0;
 }
