@@ -1,6 +1,8 @@
 #include "vec3f.h"
 #include <math.h>
 
+DYN_ARR_IMPL(Vec3f, Vec3f);
+
 inline void vec3f_translate_inplace(Vec3f* origin, Vec3f* const offset) {
   origin->x += offset->x;
   origin->y += offset->y;

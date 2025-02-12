@@ -1,5 +1,9 @@
-#include "vec4f.h"
 #include <math.h>
+
+#include "vec4f.h"
+#include "containers/dyn_arr.h"
+
+DYN_ARR_IMPL(Vec3f, Vec3f);
 
 inline void vec4f_translate_inplace(Vec4f* origin, Vec4f* const offset) {
   origin->x += offset->x;

@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <math.h>
 
-#define PI_F acosf(-1.0f)
+#define PI_F 3.141592741012573242187500f
 
 #ifdef NDEBUG
 #define ASSERT_MSG(expr, fmt, ...) ((void)0)

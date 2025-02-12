@@ -4,9 +4,13 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "containers/dyn_arr.h"
+
 typedef struct {
   float x, y, z;
 } Vec3f;
+
+DYN_ARR_TYPE(Vec3f, Vec3f);
 
 void vec3f_translate_inplace(Vec3f* origin, Vec3f* const offset);
 void vec3f_scale_inplace(Vec3f* origin, float const factor);

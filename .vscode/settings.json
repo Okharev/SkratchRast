@@ -8,6 +8,7 @@
         "stdint.h": "c",
         "stddef.h": "c",
         "helpers.h": "c",
-        "arena_allocator.h": "c"
+        "arena_allocator.h": "c",
+        "math.h": "c"
     }
 }
