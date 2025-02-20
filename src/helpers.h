@@ -1,8 +1,8 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#include <stdio.h>
 #include <math.h>
+#include <stdio.h>
 
 #define PI_F 3.141592741012573242187500f
 

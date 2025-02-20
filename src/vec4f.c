@@ -1,7 +1,7 @@
 #include <math.h>
 
-#include "vec4f.h"
 #include "containers/dyn_arr.h"
+#include "vec4f.h"
 
 DYN_ARR_IMPL(Vec3f, Vec3f);
 

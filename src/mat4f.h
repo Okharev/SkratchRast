@@ -1,20 +1,18 @@
 #ifndef MAT4F_H
 #define MAT4F_H
 
-#include <stddef.h>
-#include <stdint.h>
-
 #include "containers/dyn_arr.h"
 #include "vec3f.h"
 #include "vec4f.h"
 
 typedef struct {
-  float mat[4][4];
+  alignas(16) float mat[4][4];
 } Mat4f;
 
 DYN_ARR_TYPE(Mat4f, Mat4f);
 
 Mat4f mat4f_identity();
+void mat4f_multiply_out(const Mat4f* const first, const Mat4f* const second, Mat4f* const out);
 Mat4f mat4f_multiply(const Mat4f* const first, const Mat4f* const second);
 Vec4f mat4f_multiply_vec4f(const Mat4f* const mat, const Vec4f* const vec);
 Mat4f mat4f_rotateX(float const angle);

@@ -10,30 +10,18 @@
 
 #define DEFAULT_ALIGNEMENT (sizeof(void*) * 2)
 
-static inline bool is_power_of_two(uintptr_t num) {
-  return (num & (num - 1)) == 0;
+static bool is_power_of_two(const uintptr_t x) {
+  return (x & x - 1) == 0;
 }
 
-static uintptr_t align_forward(uintptr_t ptr, size_t align) {
-  uintptr_t p, a, modulo;
+void arena_init(Arena* a, void* backing_buffer, size_t backing_buffer_length) {}
 
-  ASSERT_MSG(is_power_of_two(align), "%d is not pow of 2", align);
+void arena_free(Arena* a, void* ptr) {}
 
-  p = ptr;
-  a = (uintptr_t)align;
-  // Same as (p % a) but faster as 'a' is a power of two
-  modulo = p & (a - 1);
+void* arena_alloc(Arena* a, size_t size) {}
 
-  if (modulo != 0) {
-    // If 'p' address is not aligned, push the address to the
-    // next value which is aligned
-    p += a - modulo;
-  }
-  return p;
-}
+void* arena_alloc_align(Arena* a, size_t size, size_t align) {}
 
-uintptr_t* arena_push(Arena* arena, const size_t size) {}
+void* arena_resize_align(Arena* a, void* old_memory, size_t old_size, size_t new_size, size_t align) {}
 
-void arena_reset(Arena* arena) {
-  arena->offset = 0;
-}
+void arena_free_all(Arena* a) {}
