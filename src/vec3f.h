@@ -12,13 +12,13 @@ typedef struct {
 
 DYN_ARR_TYPE(Vec3f, Vec3f);
 
-void vec3f_translate_inplace(Vec3f* origin, Vec3f* const offset);
-void vec3f_scale_inplace(Vec3f* origin, float const factor);
-void vec3f_scale_dim_inplace(Vec3f* origin, Vec3f* const scaler);
+void vec3f_translate_inplace(Vec3f* origin, Vec3f* offset);
+void vec3f_scale_inplace(Vec3f* origin, float factor);
+void vec3f_scale_dim_inplace(Vec3f* origin, Vec3f* scaler);
 
-Vec3f vec3f_translate(Vec3f* const origin, Vec3f* const offset);
-Vec3f vec3f_scale(Vec3f* const origin, float const factor);
-Vec3f vec3f_scale_dim(Vec3f* const origin, Vec3f* const scaler);
+Vec3f vec3f_translate(Vec3f* origin, Vec3f* offset);
+Vec3f vec3f_scale(Vec3f* origin, float factor);
+Vec3f vec3f_scale_dim(Vec3f* origin, Vec3f* scaler);
 
 float vec3f_distance(Vec3f* from, Vec3f* to);
 

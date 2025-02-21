@@ -8,13 +8,13 @@ typedef struct {
   float x, y, z, w;
 } Vec4f;
 
-void vec4f_translate_inplace(Vec4f* origin, Vec4f* const offset);
-void vec4f_scale_inplace(Vec4f* origin, float const factor);
-void vec4f_scale_dim_inplace(Vec4f* origin, Vec4f* const scaler);
+void vec4f_translate_inplace(Vec4f* origin, Vec4f* offset);
+void vec4f_scale_inplace(Vec4f* origin, float factor);
+void vec4f_scale_dim_inplace(Vec4f* origin, Vec4f* scaler);
 
-Vec4f vec4f_translate(Vec4f* const origin, Vec4f* const offset);
-Vec4f vec4f_scale(Vec4f* const origin, float const factor);
-Vec4f vec4f_scale_dim(Vec4f* const origin, Vec4f* const scaler);
+Vec4f vec4f_translate(Vec4f* origin, Vec4f* offset);
+Vec4f vec4f_scale(Vec4f* origin, float factor);
+Vec4f vec4f_scale_dim(Vec4f* origin, Vec4f* scaler);
 
 float vec4f_distance(Vec4f* from, Vec4f* to);
 

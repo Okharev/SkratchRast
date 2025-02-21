@@ -2,36 +2,39 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <stdalign.h>
 #include <stdlib.h>
 
 #include "src/containers/dyn_arr.h"
-#include "src/helpers.h"
 #include "src/mat4f.h"
+#include "src/helpers.h"
 #include "src/ppm.h"
-#include "src/vec3f.h"
-#include "src/vec4f.h"
+#include "src/memory/arena_allocator.h"
 
-typedef struct {
-  uint16_t x1, x2;
-  uint16_t y1, y2;
-  Color color;
-} Line;
 
-DYN_ARR_TYPE(Line, Line)
-DYN_ARR_IMPL(Line, Line)
 
 int main(void) {
-  const Mat4f test1 = mat4f_identity();
-  const Mat4f test2 = mat4f_identity();
+  uint8_t trash = 4;
+  uint8_t byte = 7;
+  char tess[] = "sdfsdf\0";
+  uint8_t buff[4096 * 4] = {};
+  Arena arena = arena_init(&buff, sizeof(uint8_t) * 4096 * 4);
 
-  Mat4f res;
+  Vec4f* vertices = arena_alloc(&arena, sizeof(Vec4f) * 32);
 
-  mat4f_multiply_out(&test1, &test2, &res);
+  for (int i = 0; i < 32; ++i) {
+    Vec4f v;
+    v.x = (float)i;
+    v.y = (float)i;
+    v.z = (float)i;
+    v.w = 0.0f;
+    vertices[i] = v;
+  }
 
-  Mat4f projection = mat4f_projection(1.2f, 16.0f / 9.0f, 0.3f, 1000.0f);
+  Mat4f* transforms = arena_alloc(&arena, sizeof(Mat4f) * 4);
 
-  printf("%llu", __alignof(Mat4f));
+  for (int i = 0; i < 32; ++i) {
+    transforms[i] = mat4f_identity();
+  }
 
   return 0;
 }

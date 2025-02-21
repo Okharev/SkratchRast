@@ -22,7 +22,7 @@ typedef struct {
 } PPMFile;
 
 PPMFile init_file(Format format, uint32_t width, uint32_t height);
-void clear_pixel_buff(ColorDynArr* arr, Color color);
+void clear_pixel_buff(const ColorDynArr* arr, Color color);
 void draw_line(PPMFile* file, uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, Color color);
 void free_file(PPMFile* file);
 

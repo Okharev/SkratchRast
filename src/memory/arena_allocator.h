@@ -2,13 +2,13 @@
 #define ARENA_ALLOC_H
 
 typedef struct {
-  uintptr_t* mem_buff;
-  size_t buf_len;
-  size_t prev_offset;
-  size_t curr_offset;
+  uintptr_t mem_buff;
+  size_t buff_len;
+  uintptr_t prev_offset;
+  uintptr_t curr_offset;
 } Arena;
 
-void arena_init(Arena *a, void *backing_buffer, size_t backing_buffer_length);
+Arena arena_init(void *backing_buffer, size_t backing_buffer_length);
 void arena_free(Arena *a, void *ptr);
 void* arena_alloc(Arena *a, size_t size);
 void* arena_alloc_align(Arena *a, size_t size, size_t align);
