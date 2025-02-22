@@ -51,10 +51,11 @@ void* arena_alloc_align(Arena* a, const size_t size, const size_t align) {
   const uintptr_t aligned_offset = align_forward(a->curr_offset, align);
 
   // TODO Check if allocation exceeds arena buffer
+  ASSERT_MSG((a->curr_offset + size < a->buff_len), "exceeded arena allocation");
 
   a->curr_offset = aligned_offset + size;
 
-  return (void*) a->curr_offset;
+  return (void*) aligned_offset;
 }
 
 void* arena_resize_align(Arena* a, void* old_memory, size_t old_size, size_t new_size, size_t align) {}

@@ -32,7 +32,7 @@ int main(void) {
 
   Mat4f* transforms = arena_alloc(&arena, sizeof(Mat4f) * 4);
 
-  for (int i = 0; i < 32; ++i) {
+  for (int i = 0; i < 4; ++i) {
     transforms[i] = mat4f_identity();
   }
 
