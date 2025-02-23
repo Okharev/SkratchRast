@@ -8,8 +8,11 @@
 
 typedef enum { P3, P6 } Format;
 
-typedef struct {
-  uint8_t r, g, b, a;
+typedef union {
+  struct {  // Named struct for direct access
+    uint8_t r, g, b, a;
+  };
+  uint8_t v[4];  // Array representation
 } Color;
 
 DYN_ARR_TYPE(Color, Color);

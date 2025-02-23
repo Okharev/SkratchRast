@@ -4,8 +4,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
-typedef struct {
-  float x, y, z, w;
+typedef union {
+  alignas(16) struct {  // Named struct for direct access
+    float x, y, z, w;
+  };
+  alignas(16) float v[4];  // Array representation
 } Vec4f;
 
 void vec4f_translate_inplace(Vec4f* origin, Vec4f* offset);

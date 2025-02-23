@@ -1,10 +1,11 @@
 #ifndef ARENA_ALLOC_H
 #define ARENA_ALLOC_H
 
+#include <stdint.h>
+
 typedef struct {
   uintptr_t mem_buff;
   size_t buff_len;
-  uintptr_t prev_offset;
   uintptr_t curr_offset;
 } Arena;
 

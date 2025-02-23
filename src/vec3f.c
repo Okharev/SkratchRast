@@ -96,3 +96,12 @@ inline Vec3f vec3f_backward() {
 
   return res;
 }
+
+void vec3f_print(const Vec3f* restrict vec) {
+  // clang-format off
+  printf(
+      "|%.1f, %.1f, %.1f|\n",
+      vec->x, vec->y, vec->z
+  );
+  // clang-format on
+}

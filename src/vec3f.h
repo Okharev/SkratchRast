@@ -30,4 +30,6 @@ Vec3f vec3f_right();
 Vec3f vec3f_forward();
 Vec3f vec3f_backward();
 
+void vec3f_print(const Vec3f* vec);
+
 #endif
