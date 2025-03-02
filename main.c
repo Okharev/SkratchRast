@@ -13,36 +13,45 @@
 
 typedef struct {
   Vec3f position;
+  Vec3f rotation;  // Could represent Euler angles.
+  Vec3f scale;
+} Transform;
+
+typedef struct {
+  Vec3f position;
   Vec3f up;
   Vec3f target;
   float fov;
 } Camera;
 
+typedef struct {
+  Mesh* mesh;
+  Mat4f transform;
+} Entity;
+
 int main(void) {
-  uint8_t* mem_buff = VirtualAlloc(nullptr, 1024 * 1024 * 8, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-  Arena arena = arena_init(mem_buff, 1024 * 1024 * 8);
+  uint8_t* level_buff = VirtualAlloc(nullptr, 1024 * 1024 * 8, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+  Arena level_arena = arena_init(level_buff, 1024 * 1024 * 8);
 
-  constexpr uint32_t width = 512;
-  constexpr uint32_t height = 512;
-  constexpr size_t pixel_buff_len = sizeof(Color) * width * height;
-  Color* restrict pixels = arena_alloc(&arena, pixel_buff_len);
+  Mesh mesh = obj_read(&level_arena, "C:\\Users\\Okharev\\CLionProjects\\SkratchRast\\assets\\teapot.obj");
+  auto entity = (Entity){.mesh = &mesh, .transform = mat4f_identity()};
 
-  const Mat4f projection = mat4f_projection(90.0f, 16.0f / 9.0f, 0.01f, 1000.0f);
+  const auto cameraPos = (Vec3f) { .x = 5.0f, .y = 5.0f, .z = 5.0f };
 
-  const Mesh testing = obj_read(&arena, "C:\\Users\\Okharev\\CLionProjects\\SkratchRast\\assets\\teapot.obj");
+  // First, apply object transform
+  const Mat4f object_transform = mat4f_translate(&(Vec3f) { .x = 1.0f, .y = 1.0f, .z = 1.0f });
+  mat4f_multiply(&entity.transform, &object_transform, &entity.transform);
 
+  // Then, apply the camera transformation LAST
+  const Mat4f view_transform = mat4f_translate(&(Vec3f) { .x = -cameraPos.x, .y = -cameraPos.y, .z = -cameraPos.z });
+  mat4f_multiply(&entity.transform, &view_transform, &entity.transform);
 
-  // FILE* file_ptr = fopen("C:\\Users\\Okharev\\CLionProjects\\SkratchRast\\file.ppm", "w+");
-//
-  // fprintf(file_ptr, "P3\n");
-  // fprintf(file_ptr, "%d %d\n", width, height);
-  // fprintf(file_ptr, "%d\n", 255);
-//
-  // for (int i = 0; i < width * height; ++i) {
-  //   fprintf(file_ptr, "%d %d %d\n", (int)pixels[i].r, pixels[i].g, pixels[i].b);
-  // }
-//
-  // fclose(file_ptr);
+  for (size_t i = 0; i < 5; ++i) {
+    Vec3f output;
+
+    mat4f_multiply_vec3f(&mesh.vertices[i], &output, &entity.transform);
+    vec3f_print(&output);
+  }
 
   return 0;
 }
