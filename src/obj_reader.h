@@ -10,4 +10,4 @@ typedef struct {
 
 Mesh obj_read(Arena* a, const char* path);
 
-#endif //OBJ_READER_H
+#endif  //OBJ_READER_H

@@ -252,7 +252,7 @@ Vec4f mat4f_apply_projection(const Mat4f* restrict const project, const Vec4f* r
   //   transformed.z = (transformed.z / transformed.w) * 0.5f + 0.5f;
   //   transformed.w = 1.0f;
   // }
-//
+  //
   // return transformed;
 }
 

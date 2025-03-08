@@ -1,4 +1,3 @@
-#include <math.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,24 +6,24 @@
 
 DYN_ARR_IMPL(Color, Color);
 
-inline void clear_pixel_buff(const ColorDynArr* arr, const Color color) {
+inline void clar_pixel_buff(const ColorDynArr* restrict arr, const Color color) {
   for (size_t i = 0; i < arr->size; ++i) {
     arr->data[i] = color;
   }
 }
 
-static void set_pixel(PPMFile* file, uint32_t widthPos, uint32_t heightPos, Color color) {
-  file->pixel_buff.data[(file->width * heightPos) + widthPos] = color;
+static void set_pixel(const PPMFile* restrict file, const uint32_t widthPos, const uint32_t heightPos, const Color color) {
+  file->pixel_buff.data[file->width * heightPos + widthPos] = color;
 }
 
-void draw_line(PPMFile* file, uint32_t x0, uint32_t y0, uint32_t const x1, uint32_t const y1, Color const color) {
-  const int32_t dx = abs(x1 - x0);
-  const int32_t dy = -abs(y1 - y0);
+void draw_line(const PPMFile* restrict file, uint32_t x0, uint32_t y0, uint32_t const x1, uint32_t const y1, Color const color) {
+  int32_t dx = x1 - x0;
+  const int32_t dy = -(y1 - y0);
 
   int32_t error = dx + dy;
 
-  const int8_t sy = (y0 < y1) ? 1 : -1;
-  const int8_t sx = (x0 < x1) ? 1 : -1;
+  const int8_t sy = y0 < y1 ? 1 : -1;
+  const int8_t sx = x0 < x1 ? 1 : -1;
 
   while (1) {
     set_pixel(file, x0, y0, color);
@@ -42,7 +41,7 @@ void draw_line(PPMFile* file, uint32_t x0, uint32_t y0, uint32_t const x1, uint3
   }
 }
 
-inline PPMFile init_file(Format format, uint32_t width, uint32_t height) {
+inline PPMFile init_file(const Format format, const uint32_t width, const uint32_t height) {
   PPMFile file = (PPMFile){
       .format = format,
       .width = width,
@@ -51,15 +50,14 @@ inline PPMFile init_file(Format format, uint32_t width, uint32_t height) {
       .pixel_buff = ColorDynArr_init(width * height),
   };
 
-  const Color white = {255, 255, 255, 255};
-
   for (uint32_t i = 0; i < width * height; ++i) {
+    const Color white = {{255, 255, 255, 255}};
     ColorDynArr_pushback(&file.pixel_buff, white);
   }
 
   return file;
 }
 
-inline void free_file(PPMFile* file) {
+inline void free_file(PPMFile* restrict file) {
   ColorDynArr_free(&file->pixel_buff);
 }

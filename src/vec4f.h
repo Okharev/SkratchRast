@@ -8,18 +8,19 @@ typedef union {
   alignas(16) struct {  // Named struct for direct access
     float x, y, z, w;
   };
+
   alignas(16) float v[4];  // Array representation
 } Vec4f;
 
-void vec4f_translate_inplace(Vec4f* origin, Vec4f* offset);
+void vec4f_translate_inplace(Vec4f* origin, const Vec4f* offset);
 void vec4f_scale_inplace(Vec4f* origin, float factor);
-void vec4f_scale_dim_inplace(Vec4f* origin, Vec4f* scaler);
+void vec4f_scale_dim_inplace(Vec4f* origin, const Vec4f* scaler);
 
-Vec4f vec4f_translate(Vec4f* origin, Vec4f* offset);
-Vec4f vec4f_scale(Vec4f* origin, float factor);
-Vec4f vec4f_scale_dim(Vec4f* origin, Vec4f* scaler);
+Vec4f vec4f_translate(const Vec4f* origin, const Vec4f* offset);
+Vec4f vec4f_scale(const Vec4f* origin, float factor);
+Vec4f vec4f_scale_dim(const Vec4f* origin, const Vec4f* scaler);
 
-float vec4f_distance(Vec4f* from, Vec4f* to);
+float vec4f_distance(const Vec4f* from, const Vec4f* to);
 
 Vec4f vec4f_zero();
 Vec4f vec4f_up();

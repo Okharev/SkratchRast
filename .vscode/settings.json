@@ -1,14 +1,9 @@
 {
-    "files.associations": {
-        "stdio.h": "c",
-        "ppm.h": "c",
-        "mat4f.h": "c",
-        "vec4f.h": "c",
-        "vec3f.h": "c",
-        "stdint.h": "c",
-        "stddef.h": "c",
-        "helpers.h": "c",
-        "arena_allocator.h": "c",
-        "math.h": "c"
-    }
+    "cmake.debugConfig": {
+        "type": "lldb",
+    },
+    "lldb.displayFormat": "auto",
+    "lldb.showDisassembly": "auto",
+    "lldb.dereferencePointers": true,
+    "lldb.consoleMode": "commands",
 }

@@ -1,10 +1,10 @@
 #include <stdint.h>
 
-#include "obj_reader.h"
 #include "helpers.h"
+#include "obj_reader.h"
 
 Mesh obj_read(Arena* restrict a, const char* const restrict path) {
-  FILE *file = fopen(path, "r");
+  FILE* file = fopen(path, "r");
   ASSERT_MSG(file != nullptr, "file could not be opened");
 
   Mesh mesh;
@@ -17,6 +17,7 @@ Mesh obj_read(Arena* restrict a, const char* const restrict path) {
       mesh.total_vertices++;
     }
   }
+
   ASSERT_MSG(mesh.total_vertices != 0, "obj file doesn't contain vertices");
 
   rewind(file);
@@ -25,11 +26,12 @@ Mesh obj_read(Arena* restrict a, const char* const restrict path) {
 
   size_t v_index = 0;
   while (fgets(line, sizeof(line), file)) {
-    if (line[0] == 'v' && line[1] == ' ') {
-      Vec3f vertex;
-      if (sscanf(line + 2, "%f %f %f", &vertex.x, &vertex.y, &vertex.z) == 3) {
-        mesh.vertices[v_index++] = vertex;
-      }
+    if (line[0] != 'v' || line[1] != ' ')
+      continue;
+
+    Vec3f vertex;
+    if (sscanf(line + 2, "%f %f %f", &vertex.x, &vertex.y, &vertex.z) == 3) {
+      mesh.vertices[v_index++] = vertex;
     }
   }
 
