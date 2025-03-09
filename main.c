@@ -1,4 +1,3 @@
-#include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -7,62 +6,79 @@
 #include "src/obj_reader.h"
 
 typedef struct {
-  Vec3f position;
-  Vec3f rotation;  // Could represent Euler angles.
-  Vec3f scale;
+    Vec3f position;
+    Vec3f rotation; // Could represent Euler angles.
+    Vec3f scale;
 } Transform;
 
 typedef struct {
-  Vec3f position;
-  Vec3f up;
-  Vec3f target;
-  float fov;
+    Vec3f position;
+    Vec3f up;
+    Vec3f target;
+    float fov;
 } Camera;
 
 typedef struct {
-  Mesh* mesh;
-  Mat4f transform;
+    Mesh *mesh;
+    Mat4f transform;
 } Entity;
 
 typedef struct {
-  uint16_t X;
-  uint16_t Y;
+    uint16_t x;
+    uint16_t y;
 } ScreenPos;
 
-Vec3f world_to_camera(const Camera* const restrict camera, const Vec3f* const restrict position) {
-  Vec3f result;
-  result.x = position->x - camera->position.x;
-  result.y = position->y - camera->position.y;
-  result.z = position->z - camera->position.z;
-  return result;
+void apply_camera_transform(const Camera *restrict const camera, const Mat4f *restrict vertex,
+                            Mat4f *restrict const output) {
+    const Mat4f cam_relative_translation = mat4f_translate(&(Vec3f){
+        .x = -camera->position.x, .y = -camera->position.y, .z = -camera->position.z
+    });
+    mat4f_multiply(vertex, &cam_relative_translation, output);
 }
 
+void apply_projection_transform(const Mat4f *restrict projection, const Mat4f *restrict vertex, Mat4f *restrict output) {
+    mat4f_multiply(vertex, projection, output);
+}
+
+Mat4f get_cam_projection(const Camera* restrict const cam) {
+    return mat4f_projection(cam->fov, 16.0f / 9.0f, 0.001f, 10000.0f);
+}
+
+
 int main(void) {
-  constexpr size_t size = 1024 * 1024 * 8;  // 8MB
-  size_t test = 15;
-  uint8_t* restrict mem_buff = malloc(size);
-  Arena level_arena = arena_init(mem_buff, size);
+    constexpr size_t size = 1024 * 1024 * 8; // 8MB
+    uint8_t *restrict mem_buff = malloc(size);
+    Arena level_arena = arena_init(mem_buff, size);
 
-  Mesh mesh = obj_read(&level_arena, "../assets/teapot.obj");
-  auto entity = (Entity){ .mesh = &mesh, .transform = mat4f_identity() };
+    // mesh with vertex in local space
+    Camera cam = (Camera){
+        .position = (Vec3f){.x = -5.0f, .y = -5.0f, .z = -5.0f},
+        .up = {.x = 0.0f, .y = 1.0f, .z = 0.0f},
+        .target = {.x = 0.0f, .y = 0.0f, .z = 0.0f},
+        .fov = 75.0f
+    };
+    const Mesh mesh = obj_read(&level_arena, "../assets/teapot.obj");
 
-  const auto cameraPos = (Vec3f) { .x = 5.0f, .y = 5.0f, .z = 5.0f };
+    Mat4f final_mat = mat4f_identity();
 
-  // First, apply object transform
-  const Mat4f object_transform = mat4f_translate(&(Vec3f) { .x = 1.0f, .y = 1.0f, .z = 1.0f });
-  mat4f_multiply(&entity.transform, &object_transform, &entity.transform);
+    // Apply the WorldSpace transform to get the vertex's position in the world
+    const Vec3f worldPos = (Vec3f){-5.0f, -5.0f, -5.0f};
+    const Mat4f vertexPos = mat4f_translate(&worldPos);
+    mat4f_multiply(&final_mat, &vertexPos, &final_mat);
 
-  // Then, apply the camera transformation LAST
-  const Mat4f view_transform = mat4f_translate(&(Vec3f) { .x = -cameraPos.x, .y = -cameraPos.y, .z = -cameraPos.z });
-  mat4f_multiply(&entity.transform, &view_transform, &entity.transform);
+    // Apply the View Space transform to get the vertex position relative from the camera
+    apply_camera_transform(&cam, &final_mat, &final_mat);
 
-  for (size_t i = 0; i < mesh.total_vertices; ++i) {
-    Vec3f output;
+    // Apply clip space here with projection matrix to apply perspective to vertexes
+    const Mat4f projection = get_cam_projection(&cam);
+    apply_projection_transform(&projection, &final_mat, &final_mat);
 
-    mat4f_multiply_vec3f(&mesh.vertices[i], &output, &entity.transform);
+    // Perspective divide to get NDC coordinates which maps vertexes position between 1 and -1
 
-    printf("%f", output.x);
-  }
+    // Take ndc coordinates and transform them to actual pixel coordinates
 
-  return 0;
+    for (size_t i = 0; i < mesh.total_vertices; ++i) {
+    }
+
+    return 0;
 }

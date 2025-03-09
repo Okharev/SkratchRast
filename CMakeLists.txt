@@ -7,9 +7,10 @@ add_executable(TinyRaster main.c src/ppm.c src/memory/arena_allocator.c src/memo
         src/obj_reader.c
         src/obj_reader.h)
 target_link_libraries(TinyRaster m)
+
 target_compile_options(TinyRaster PRIVATE
   $<$<CONFIG:Debug>:-g -O0 -ffast-math -march=native -Wall -Wextra>
-  $<$<CONFIG:Release>:-O3 -ffast-math -march=native -flto -DNDEBUG>
-  $<$<CONFIG:RelWithDebInfo>:-O3 -ffast-math -march=native -g>
+  $<$<CONFIG:Release>:-Ofast -ffast-math -march=native -DNDEBUG>
+  $<$<CONFIG:RelWithDebInfo>:-Ofast -ffast-math -march=native -g>
   $<$<CONFIG:MinSizeRel>:-Os -DNDEBUG>
 )
