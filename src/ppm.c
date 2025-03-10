@@ -12,7 +12,7 @@ inline void clear_pixel_buff(const ColorDynArr* restrict arr, const Color color)
   }
 }
 
-static void set_pixel(const PPMFile* restrict file, const uint32_t widthPos, const uint32_t heightPos, const Color color) {
+inline void set_pixel(const PPMFile* const restrict file, const uint32_t widthPos, const uint32_t heightPos, const Color color) {
   file->pixel_buff.data[file->width * heightPos + widthPos] = color;
 }
 

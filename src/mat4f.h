@@ -22,7 +22,6 @@ Mat4f mat4f_rotateZ(float angle);
 Mat4f mat4f_scaling(const Vec3f* restrict scaling);
 Mat4f mat4f_translate(const Vec3f* restrict translation);
 Mat4f mat4f_projection(float fov, float aspect, float near, float far);
-Vec4f mat4f_apply_projection(const Mat4f* restrict project, const Vec4f* restrict point);
 
 void mat4f_print(const Mat4f* restrict m);
 

@@ -243,19 +243,6 @@ Mat4f mat4f_projection(const float fov, const float aspect, const float near, co
   return m;
 }
 
-Vec4f mat4f_apply_projection(const Mat4f* restrict const project, const Vec4f* restrict const point) {
-  Vec4f transformed = mat4f_multiply_vec4f(project, point);
-
-  if (fabsf(transformed.w) > 1e-6) {
-    transformed.x /= transformed.w;
-    transformed.y /= transformed.w;
-    transformed.z = (transformed.z / transformed.w) * 0.5f + 0.5f;
-    transformed.w = 1.0f;
-  }
-
-  return transformed;
-}
-
 void mat4f_print(const Mat4f* restrict const m) {
   // clang-format off
   printf(
