@@ -4,6 +4,8 @@
 
 #include "ppm.h"
 
+#include "memory/arena_allocator.h"
+
 DYN_ARR_IMPL(Color, Color);
 
 inline void clear_pixel_buff(const ColorDynArr* restrict arr, const Color color) {
@@ -56,6 +58,17 @@ inline PPMFile init_file(const Format format, const uint32_t width, const uint32
   }
 
   return file;
+}
+
+void write_file(const PPMFile* restrict file, const char* restrict path) {
+  FILE* restrict image = fopen(path, "wb+");
+  // TODO Make a parser to handle binary data
+  fprintf(image, "P3\n%hu %hu\n255\n", file->width, file->height);
+
+  for (uint32_t i = 0; i < file->width * file->height; ++i) {
+    const Color pixel = file->pixel_buff.data[i];
+    fprintf(image, "%u %u %u\n", pixel.r, pixel.g, pixel.b);
+  }
 }
 
 inline void free_file(PPMFile* restrict file) {

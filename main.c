@@ -36,19 +36,18 @@ int main(void) {
   uint8_t* restrict mem_buff = malloc(size);
   Arena level_arena = arena_init(mem_buff, size);
 
-  const PPMFile file = init_file(P3, 1920, 1080);
+  const PPMFile file = init_file(P3, 240, 135);
   clear_pixel_buff(&file.pixel_buff, (Color){0, 0, 0});
 
-  const Mesh mesh = obj_read(&level_arena, "../assets/teapot.obj");
-  const Vec3f camera_pos = (Vec3f){.x = 10.0f, .y = 10.0f, .z = 10.0f};
-  const Vec3f mesh_pos = (Vec3f){.x = 2.0f, .y = 1.0f, .z = 1.0f};
+  const Mesh mesh = obj_read(&level_arena, "../assets/m4a1_s.obj");
+  const Vec3f camera_pos = (Vec3f){.x = 10.0f, .y = 0.0f, .z = 15.0f};
+  const Vec3f mesh_pos = (Vec3f){.x = 10.0f, .y = 0.0f, .z = 0.0f};
 
-  const Mat4f proj = mat4f_projection(65.0f, 16.0f / 9.0f, 0.0001f, 10000.0f);
+  const Mat4f proj = mat4f_projection(1.00472f, 16.0f / 9.0f, 0.0001f, 10000.0f);
   const Mat4f view = mat4f_translate(&(Vec3f){.x = -camera_pos.x, .y = -camera_pos.y, .z = -camera_pos.z});
   const Mat4f world = mat4f_translate(&mesh_pos);
 
-  Mat4f vp;  // View-projection
-  Mat4f mvp = mat4f_identity();
+  Mat4f vp, mvp;  // View-projection
   mat4f_multiply(&proj, &view, &vp);
   mat4f_multiply(&vp, &world, &mvp);
 
@@ -60,26 +59,24 @@ int main(void) {
     if (fabsf(out.w) <= EPSILON)
       continue;  // Skip unsafe divide by zero
 
-    const Vec3f ndc = {
-        .x = out.x / out.w,
-        .y = out.y / out.w,
-        .z = out.z / out.w,
-    };
+    const float inv_w = 1.0f / out.w;
+    const Vec3f ndc = {out.x * inv_w, out.y * inv_w, out.z * inv_w};
 
     // Clipping check: NDC must be between -1 and 1
     if (ndc.x < -1.0f || ndc.x > 1.0f || ndc.y < -1.0f || ndc.y > 1.0f || ndc.z < -1.0f || ndc.z > 1.0f)
       continue;
 
-    const uint16_t screenX = (uint16_t)((ndc.x + 1.0f) * 0.5f * 1920);
-    const uint16_t screenY = (uint16_t)((1.0f - ndc.y) * 0.5f * 1080);
+    const uint16_t screenX = (uint16_t)((ndc.x + 1.0f) * 0.5f * 240.0f);
+    const uint16_t screenY = (uint16_t)((1.0f - ndc.y) * 0.5f * 135.0f);
 
     // Screen bounds check
-    if (screenX >= 1920 || screenY >= 1080)
+    if (screenX >= 240 || screenY >= 135)
       continue;
 
     set_pixel(&file, screenX, screenY, (Color){255, 255, 255});
-    printf("Vertex %zu: (%u, %u)\n", i, screenX, screenY);
   }
+
+  write_file(&file, "../image.ppm");
 
   return 0;
 }
