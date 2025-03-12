@@ -3,25 +3,25 @@
 
 DYN_ARR_IMPL(Vec3f, Vec3f);
 
-inline void vec3f_translate_inplace(Vec3f* origin, const Vec3f* const offset) {
+inline void vec3f_translate_inplace(Vec3f* restrict origin, const Vec3f* restrict const offset) {
   origin->x += offset->x;
   origin->y += offset->y;
   origin->z += offset->z;
 }
 
-inline void vec3f_scale_inplace(Vec3f* origin, float const factor) {
+inline void vec3f_scale_inplace(Vec3f* restrict origin, float const factor) {
   origin->x *= factor;
   origin->y *= factor;
   origin->z *= factor;
 }
 
-inline void vec3f_scale_dim_inplace(Vec3f* origin, const Vec3f* const scaler) {
+inline void vec3f_scale_dim_inplace(Vec3f* restrict origin, const Vec3f* restrict const scaler) {
   origin->x *= scaler->x;
   origin->y *= scaler->y;
   origin->z *= scaler->z;
 }
 
-inline Vec3f vec3f_translate(const Vec3f* const origin, const Vec3f* const offset) {
+inline Vec3f vec3f_translate(const Vec3f* restrict const origin, const Vec3f* restrict const offset) {
   const Vec3f res = (Vec3f){
       .x = origin->x + offset->x,
       .y = origin->y + offset->y,
@@ -31,7 +31,7 @@ inline Vec3f vec3f_translate(const Vec3f* const origin, const Vec3f* const offse
   return res;
 }
 
-inline Vec3f vec3f_scale(const Vec3f* origin, float const factor) {
+inline Vec3f vec3f_scale(const Vec3f* restrict origin, float const factor) {
   const Vec3f res = (Vec3f){
       .x = origin->x * factor,
       .y = origin->y * factor,
@@ -41,7 +41,7 @@ inline Vec3f vec3f_scale(const Vec3f* origin, float const factor) {
   return res;
 }
 
-inline Vec3f vec3f_scale_dim(const Vec3f* const origin, const Vec3f* const scaler) {
+inline Vec3f vec3f_scale_dim(const Vec3f* const origin, const Vec3f* restrict const scaler) {
   const Vec3f res = (Vec3f){
       .x = origin->x * scaler->x,
       .y = origin->y * scaler->y,
@@ -51,7 +51,7 @@ inline Vec3f vec3f_scale_dim(const Vec3f* const origin, const Vec3f* const scale
   return res;
 }
 
-inline float vec3f_distance(const Vec3f* from, const Vec3f* to) {
+inline float vec3f_distance(const Vec3f* restrict from, const Vec3f* restrict to) {
   return fabsf(sqrtf(powf(from->x - to->x, 2.0f) + powf(from->y - to->y, 2.0f) + powf(from->z - to->z, 2.0f)));
 }
 

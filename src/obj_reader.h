@@ -8,6 +8,6 @@ typedef struct {
   Vec3f* restrict vertices;
 } Mesh;
 
-Mesh obj_read(Arena* a, const char* path);
+Mesh obj_read(Arena* restrict a, const char* restrict path);
 
 #endif  //OBJ_READER_H

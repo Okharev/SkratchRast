@@ -2,25 +2,25 @@
 
 #include "vec4f.h"
 
-inline void vec4f_translate_inplace(Vec4f* origin, const Vec4f* const offset) {
+inline void vec4f_translate_inplace(Vec4f* restrict origin, const Vec4f* restrict const offset) {
   origin->x += offset->x;
   origin->y += offset->y;
   origin->z += offset->z;
 }
 
-inline void vec4f_scale_inplace(Vec4f* origin, float const factor) {
+inline void vec4f_scale_inplace(Vec4f* restrict origin, float const factor) {
   origin->x *= factor;
   origin->y *= factor;
   origin->z *= factor;
 }
 
-inline void vec4f_scale_dim_inplace(Vec4f* origin, const Vec4f* const scaler) {
+inline void vec4f_scale_dim_inplace(Vec4f* restrict origin, const Vec4f* restrict const scaler) {
   origin->x *= scaler->x;
   origin->y *= scaler->y;
   origin->z *= scaler->z;
 }
 
-inline Vec4f vec4f_translate(const Vec4f* const origin, const Vec4f* const offset) {
+inline Vec4f vec4f_translate(const Vec4f* restrict const origin, const Vec4f* restrict const offset) {
   const Vec4f res = (Vec4f){
       .x = origin->x + offset->x,
       .y = origin->y + offset->y,
@@ -30,7 +30,7 @@ inline Vec4f vec4f_translate(const Vec4f* const origin, const Vec4f* const offse
   return res;
 }
 
-inline Vec4f vec4f_scale(const Vec4f* origin, float const factor) {
+inline Vec4f vec4f_scale(const Vec4f* restrict origin, float const factor) {
   const Vec4f res = (Vec4f){
       .x = origin->x * factor,
       .y = origin->y * factor,
@@ -40,7 +40,7 @@ inline Vec4f vec4f_scale(const Vec4f* origin, float const factor) {
   return res;
 }
 
-inline Vec4f vec4f_scale_dim(const Vec4f* const origin, const Vec4f* const scaler) {
+inline Vec4f vec4f_scale_dim(const Vec4f* restrict const origin, const Vec4f* restrict const scaler) {
   const Vec4f res = (Vec4f){
       .x = origin->x * scaler->x,
       .y = origin->y * scaler->y,
@@ -50,7 +50,7 @@ inline Vec4f vec4f_scale_dim(const Vec4f* const origin, const Vec4f* const scale
   return res;
 }
 
-inline float vec4f_distance(const Vec4f* from, const Vec4f* to) {
+inline float vec4f_distance(const Vec4f* restrict from, const Vec4f* restrict to) {
   return fabsf(sqrtf(powf(from->x - to->x, 2.0) + powf(from->y - to->y, 2.0) + powf(from->z - to->z, 2.0)));
 }
 
