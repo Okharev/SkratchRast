@@ -216,6 +216,10 @@ Mat4f mat4f_translate(const Vec3f* restrict const translation) {
   return m;
 }
 
+Mat4f mat4f_look_at(const Vec3f* restrict target) {
+
+}
+
 Mat4f mat4f_projection(const float fov, const float aspect, const float near, const float far) {
   const float tanHalfFov = tanf(fov / 2.0f);
 

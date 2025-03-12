@@ -1,75 +1,35 @@
-#include <math.h>
-#include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "src/mat4f.h"
+#include "src/mesh.h"
 #include "src/memory/arena_allocator.h"
-#include "src/obj_reader.h"
+#include "src/camera.h"
 #include "src/ppm.h"
 
-typedef struct {
-  Vec3f position;
-  Vec3f rotation;  // Could represent Euler angles.
-  Vec3f scale;
-} Transform;
-
-typedef struct {
-  Mesh* mesh;
-  Mat4f transform;
-} Entity;
-
-typedef struct {
-  uint16_t X;
-  uint16_t Y;
-} ScreenPos;
-
 int main(void) {
-  constexpr size_t size = 1024 * 1024 * 1;  // 8MB
-  uint8_t* restrict mem_buff = malloc(size);
-  Arena level_arena = arena_init(mem_buff, size);
+    constexpr size_t size = 1024 * 1024 * 1; // 1MB
+    uint8_t *restrict mem_buff = malloc(size);
+    Arena level_arena = arena_init(mem_buff, size);
 
-  const PPMFile file = init_file(P3, 480, 270);
-  clear_pixel_buff(&file.pixel_buff, (Color){0, 0, 0});
+    const PPMFile file = init_file(P3, 480, 270);
+    clear_pixel_buff(&file.pixel_buff, (Color){0, 0, 0});
 
-  const Mesh mesh = obj_read(&level_arena, "../assets/ak47.obj");
-  const Vec3f camera_pos = (Vec3f){.x = 0.0f, .y = 65.0f, .z = 230.0f};
-  const Vec3f mesh_pos = (Vec3f){.x = 0.0f, .y = 0.0f, .z = 0.0f};
+    const Mesh *mesh = mesh_from_obj(&level_arena, "../assets/karanbit.obj");
+    Camera cam = init_camera((Vec3f){.x = 0.0f, .y = 0.0f, .z = 0.3f }, (Vec3f) { .x = 0.0f, .y = 1.0f, .z = 0.0f }, (Vec3f) { .x = 0.0f, .y = 0.0f, .z = 0.0f }, 40.0f);
 
-  const Mat4f proj = mat4f_projection(1.00472f, 16.0f / 9.0f, 0.0001f, 10000.0f);
-  const Mat4f view = mat4f_translate(&(Vec3f){.x = -camera_pos.x, .y = -camera_pos.y, .z = -camera_pos.z});
-  const Mat4f world = mat4f_translate(&mesh_pos);
+    // TODO Refactor this to handle window buffers
+    uint16_t i = 0;
+    char line[32];
+    while (i != 10) {
+        sprintf(line, "../image-%u.ppm", i);
 
-  Mat4f vp, mvp;  // View-projection
-  mat4f_multiply(&proj, &view, &vp);
-  mat4f_multiply(&vp, &world, &mvp);
+        render_mesh(&cam, mesh, &file);
+        write_file(&file, line);
+        clear_pixel_buff(&file.pixel_buff, (Color) { 0, 0, 0 });
 
-  for (size_t i = 0; i < mesh.total_vertices; ++i) {
-    Vec4f out;
-    mat4f_multiply_vec4f(&(Vec4f){.x = mesh.vertices[i].x, .y = mesh.vertices[i].y, .z = mesh.vertices[i].z, .w = 1.0f}, &out, &mvp);
+        cam.position.z += 1.0f;
+        i++;
+    }
 
-    constexpr float EPSILON = 1e-6f;  // Very small tolerance number
-    if (fabsf(out.w) <= EPSILON)
-      continue;  // Skip unsafe divide by zero
-
-    const float inv_w = 1.0f / out.w;
-    const Vec3f ndc = {out.x * inv_w, out.y * inv_w, out.z * inv_w};
-
-    // Clipping check: NDC must be between -1 and 1
-    if (ndc.x < -1.0f || ndc.x > 1.0f || ndc.y < -1.0f || ndc.y > 1.0f || ndc.z < -1.0f || ndc.z > 1.0f)
-      continue;
-
-    const uint16_t screenX = (uint16_t)((ndc.x + 1.0f) * 0.5f * 480.0f);
-    const uint16_t screenY = (uint16_t)((1.0f - ndc.y) * 0.5f * 270.0f);
-
-    // Screen bounds check
-    if (screenX >= 480 || screenY >= 270)
-      continue;
-
-    set_pixel(&file, screenX, screenY, (Color){255, 255, 255});
-  }
-
-  write_file(&file, "../image.ppm");
-
-  return 0;
+    return 0;
 }

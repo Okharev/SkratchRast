@@ -7,7 +7,9 @@ add_executable(TinyRaster main.c src/ppm.c src/memory/arena_allocator.c src/memo
         src/obj_reader.c
         src/obj_reader.h
         src/camera.c
-        src/camera.h)
+        src/camera.h
+        src/mesh.c
+        src/mesh.h)
 target_link_libraries(TinyRaster m)
 
 target_compile_options(TinyRaster PRIVATE

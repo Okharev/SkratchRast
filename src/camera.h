@@ -2,6 +2,8 @@
 #define CAMERA_H
 
 #include "vec3f.h"
+#include "ppm.h"
+#include "mesh.h"
 
 typedef struct {
   Vec3f position;
@@ -10,6 +12,7 @@ typedef struct {
   float fov;
 } Camera;
 
-Camera init_camera(const Vec3f* restrict position, const Vec3f* restrict up, const Vec3f* restrict target, float fov);
+Camera init_camera(Vec3f position, Vec3f up, Vec3f target, float fov);
+void render_mesh(const Camera *restrict cam, const Mesh *restrict mesh, const PPMFile* restrict const buffer) ;
 
 #endif //CAMERA_H

@@ -21,6 +21,34 @@ inline void vec3f_scale_dim_inplace(Vec3f* restrict origin, const Vec3f* restric
   origin->z *= scaler->z;
 }
 
+Vec3f vec3f_cross(const Vec3f* restrict const vec_one, const Vec3f* restrict const vec_two) {
+  const Vec3f result = {
+    vec_one->y * vec_two->z - vec_one->z * vec_two->y,
+    vec_one->z * vec_two->x - vec_one->x * vec_two->z,
+    vec_one->x * vec_two->y - vec_one->y * vec_two->x
+  };
+
+  return result;
+}
+
+Vec3f vec3f_normalize(const Vec3f* const restrict vec) {
+  const float length = sqrtf(vec->x * vec->x + vec->y * vec->y + vec->z * vec->z);
+
+  // Avoid division by zero
+  if (length == 0.0f)
+    return (Vec3f){0.0f, 0.0f, 0.0f};
+
+  const float invLength = 1.0f / length;
+
+  const Vec3f result = {
+    vec->x * invLength,
+    vec->y * invLength,
+    vec->z * invLength
+  };
+
+  return result;
+}
+
 inline Vec3f vec3f_translate(const Vec3f* restrict const origin, const Vec3f* restrict const offset) {
   const Vec3f res = (Vec3f){
       .x = origin->x + offset->x,
@@ -46,6 +74,26 @@ inline Vec3f vec3f_scale_dim(const Vec3f* const origin, const Vec3f* restrict co
       .x = origin->x * scaler->x,
       .y = origin->y * scaler->y,
       .z = origin->z * scaler->z,
+  };
+
+  return res;
+}
+
+Vec3f vec3f_substract(const Vec3f* restrict const first, const Vec3f* restrict const sec) {
+  const Vec3f res = (Vec3f){
+    .x = first->x - sec->x,
+    .y = first->y - sec->y,
+    .z = first->z - sec->z,
+  };
+
+  return res;
+}
+
+Vec3f vec3f_add(const Vec3f *first, const Vec3f *sec) {
+  const Vec3f res = (Vec3f){
+    .x = first->x + sec->x,
+    .y = first->y + sec->y,
+    .z = first->z + sec->z,
   };
 
   return res;
