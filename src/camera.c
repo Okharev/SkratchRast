@@ -8,12 +8,43 @@ static float deg_to_rad(const float radians) {
     return radians * (180.0f / PI_F);
 }
 
-///
-/// @param position The camera location in world space
-/// @param up where is the camera "up" vector (usually Y)
-/// @param target where the camera is looking at (Pitch and Yaw)
-/// @param fov The field of view in degrees
-/// @return the final camera
+static void compute_mvp(const Camera* restrict cam, Mat4f* restrict mvp) {
+    // Compute view matrix components.
+    const Vec3f subbed    = vec3f_substract(&cam->target, &cam->position);
+    const Vec3f forward   = vec3f_normalize(&subbed);
+    const Vec3f normalized = vec3f_cross(&cam->up, &forward);
+    const Vec3f right     = vec3f_normalize(&normalized);
+    const Vec3f corrected = vec3f_cross(&right, &forward);
+
+    const Mat4f view = (Mat4f){
+        .mat = {
+            {right.x,    right.y,    right.z,    0.0f},
+            {corrected.x,corrected.y,corrected.z,0.0f},
+            {-forward.x, -forward.y, -forward.z, 0.0f},
+            {0.0f,       0.0f,       0.0f,       1.0f}
+        }
+    };
+
+    // Translation to move the world relative to the camera.
+    const Mat4f translate = mat4f_translate(&(Vec3f){.x = -cam->position.x,
+                                                 .y = -cam->position.y,
+                                                 .z = -cam->position.z});
+    Mat4f viewTranslate;
+    mat4f_multiply(&view, &translate, &viewTranslate);
+
+    // Perspective projection.
+    const Mat4f projection = mat4f_projection(deg_to_rad(cam->fov), 16.0f / 9.0f, 0.01f, 1000.0f);
+
+    Mat4f vp;
+    mat4f_multiply(&projection, &viewTranslate, &vp);
+
+    // If there's a world-to-mesh transform, it can be applied here.
+    // For now, assume identity transformation:
+    const Mat4f world_mesh_space = mat4f_translate(&(Vec3f){.x = 0.0f, .y = 0.0f, .z = 0.0f});
+
+    mat4f_multiply(&vp, &world_mesh_space, mvp);
+}
+
 Camera init_camera(const Vec3f position, const Vec3f up, const Vec3f target, const float fov) {
     Camera cam;
     cam.fov = fov;
@@ -24,40 +55,11 @@ Camera init_camera(const Vec3f position, const Vec3f up, const Vec3f target, con
     return cam;
 }
 
-/// TODO rafcator into smaller function for clarity
-/// TODO document this
-/// TODO Add Edges drawing
-/// TODO Add Faces drawing
-/// TODO Add simple shading
-/// @param cam
-/// @param mesh
-/// @param buffer
-void render_mesh(SDL_Renderer* restrict renderer, const Camera *restrict cam, const Mesh *restrict mesh) {
-    const Vec3f subbed = vec3f_substract(&cam->target, &cam->position);
-    const Vec3f forward = vec3f_normalize(&subbed);
-    const Vec3f normalized = vec3f_cross(&cam->up, &forward);
-    const Vec3f right = vec3f_normalize(&normalized);
-    const Vec3f corrected = vec3f_cross(&right, &forward);
+void render_mesh(SDL_Renderer* restrict renderer, const Camera* restrict cam, const Mesh* restrict mesh) {
+    Mat4f mvp;
+    compute_mvp(cam, &mvp);
 
-    const Mat4f view = (Mat4f){
-        .mat = {
-            {right.x, right.y, right.z, 0.0f},
-            {corrected.x, corrected.y, corrected.z, 0.0f},
-            {-forward.x, -forward.y, -forward.z, 0.0f},
-            {0.0f, 0.0f, 0.0f, 1.0f}
-        }
-    };
-
-    const Mat4f translate = mat4f_translate(&(Vec3f) { .x = -cam->position.x, .y = -cam->position.y, .z = -cam->position.z });
-    Mat4f result;
-    mat4f_multiply(&view, &translate, &result);
-
-    const Mat4f projection = mat4f_projection(deg_to_rad(cam->fov), 16.0f / 9.0f, 0.01f, 10000.0f);
-    const Mat4f world_mesh_space = mat4f_translate(&(Vec3f) { .x = 0.0f, .y = 0.0f, .z = 0.0f });
-
-    Mat4f vp, mvp;  // View-projection
-    mat4f_multiply(&projection, &result, &vp);
-    mat4f_multiply(&vp, &world_mesh_space, &mvp);
+    SDL_FPoint points[mesh->vertices_count] = {};
 
     for (int i = 0; i < mesh->vertices_count; ++i) {
         Vec4f out;
@@ -70,17 +72,16 @@ void render_mesh(SDL_Renderer* restrict renderer, const Camera *restrict cam, co
         const float inv_w = 1.0f / out.w;
         const Vec3f ndc = {out.x * inv_w, out.y * inv_w, out.z * inv_w};
 
-        // Clipping check: NDC must be between -1 and 1
         if (ndc.x < -1.0f || ndc.x > 1.0f || ndc.y < -1.0f || ndc.y > 1.0f || ndc.z < -1.0f || ndc.z > 1.0f)
             continue;
 
-        // const uint16_t screenX = ((ndc.x + 1.0f) * 0.5f * (float) renderer->view->pixel_w);
-        // const uint16_t screenY = ((1.0f - ndc.y) * 0.5f * (float) renderer->view->pixel_h);
-        //
-        // // Screen bounds check
-        // if (screenX >= renderer->view->pixel_w || screenY >= renderer->view->pixel_h)
-        //     continue;
+        const SDL_FPoint p = {
+            .x = ((ndc.x + 1.0f) * 0.5f * 480.0f),
+            .y = ((1.0f - ndc.y) * 0.5f * 270.0f)
+        };
 
-        SDL_RenderPoint(renderer, (ndc.x + 1.0f) * 0.5f * 480.0f, (1.0f - ndc.y) * 0.5f * 270.0f);
+        points[i] = p;
     }
+
+    SDL_RenderPoints(renderer, points, mesh->vertices_count);
 }
