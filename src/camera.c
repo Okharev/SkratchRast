@@ -32,7 +32,7 @@ Camera init_camera(const Vec3f position, const Vec3f up, const Vec3f target, con
 /// @param cam
 /// @param mesh
 /// @param buffer
-void render_mesh(const Camera *restrict cam, const Mesh *restrict mesh, const PPMFile* restrict const buffer) {
+void render_mesh(SDL_Renderer* restrict renderer, const Camera *restrict cam, const Mesh *restrict mesh) {
     const Vec3f subbed = vec3f_substract(&cam->target, &cam->position);
     const Vec3f forward = vec3f_normalize(&subbed);
     const Vec3f normalized = vec3f_cross(&cam->up, &forward);
@@ -74,13 +74,13 @@ void render_mesh(const Camera *restrict cam, const Mesh *restrict mesh, const PP
         if (ndc.x < -1.0f || ndc.x > 1.0f || ndc.y < -1.0f || ndc.y > 1.0f || ndc.z < -1.0f || ndc.z > 1.0f)
             continue;
 
-        const uint16_t screenX = (uint16_t)((ndc.x + 1.0f) * 0.5f * (float) buffer->width);
-        const uint16_t screenY = (uint16_t)((1.0f - ndc.y) * 0.5f * (float) buffer->height);
+        // const uint16_t screenX = ((ndc.x + 1.0f) * 0.5f * (float) renderer->view->pixel_w);
+        // const uint16_t screenY = ((1.0f - ndc.y) * 0.5f * (float) renderer->view->pixel_h);
+        //
+        // // Screen bounds check
+        // if (screenX >= renderer->view->pixel_w || screenY >= renderer->view->pixel_h)
+        //     continue;
 
-        // Screen bounds check
-        if (screenX >= buffer->width || screenY >= buffer->height)
-            continue;
-
-        set_pixel(buffer, screenX, screenY, (Color){255, 255, 255});
+        SDL_RenderPoint(renderer, (ndc.x + 1.0f) * 0.5f * 480.0f, (1.0f - ndc.y) * 0.5f * 270.0f);
     }
 }

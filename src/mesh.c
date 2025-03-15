@@ -15,11 +15,17 @@ static bool check_file_extension(const char* restrict path, const char* restrict
 }
 
 Mesh* mesh_from_obj(Arena* arena, const char* restrict path) {
-    ASSERT_MSG(check_file_extension(path, "obj"), "given path is not a valid obj file");
+    if (!check_file_extension(path, "obj")) {
+      perror("Given file is not a valid obj file");
+      exit(1);
+    }
 
     FILE* file = fopen(path, "r");
 
-    ASSERT_MSG(file != nullptr, "file could not be opened");
+    if (file == nullptr) {
+      perror("File could not be opened");
+      exit(1);
+    }
 
     Mesh* mesh = arena_alloc(arena, sizeof(Mesh));
 
