@@ -8,7 +8,7 @@ static float deg_to_rad(const float radians) {
     return radians * (180.0f / PI_F);
 }
 
-static void compute_mvp(const Camera* restrict cam, Mat4f* restrict mvp) {
+static void compute_mvp(const Camera* const restrict cam, Mat4f* const restrict mvp) {
     // Compute view matrix components.
     const Vec3f subbed    = vec3f_substract(&cam->target, &cam->position);
     const Vec3f forward   = vec3f_normalize(&subbed);
@@ -55,13 +55,13 @@ Camera init_camera(const Vec3f position, const Vec3f up, const Vec3f target, con
     return cam;
 }
 
-void render_mesh(SDL_Renderer* restrict renderer, const Camera* restrict cam, const Mesh* restrict mesh) {
+void render_mesh(SDL_Renderer* const restrict renderer, const Camera* const restrict cam, const Mesh* const restrict mesh) {
     Mat4f mvp;
     compute_mvp(cam, &mvp);
 
     SDL_FPoint points[mesh->vertices_count] = {};
 
-    for (int i = 0; i < mesh->vertices_count; ++i) {
+    for (uint32_t i = 0; i < mesh->vertices_count; ++i) {
         Vec4f out;
         mat4f_multiply_vec4f(&(Vec4f){.x = mesh->vertices[i].x, .y = mesh->vertices[i].y, .z = mesh->vertices[i].z, .w = 1.0f}, &out, &mvp);
 
