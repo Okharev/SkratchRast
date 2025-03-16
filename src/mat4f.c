@@ -32,6 +32,33 @@ Mat4f mat4f_identity() {
   return m;
 }
 
+void mat4f_transpose(const Mat4f* const restrict in, Mat4f* const restrict out) {
+  const float a00 = in->mat[0][0], a01 = in->mat[0][1], a02 = in->mat[0][2], a03 = in->mat[0][3];
+  const float a10 = in->mat[1][0], a11 = in->mat[1][1], a12 = in->mat[1][2], a13 = in->mat[1][3];
+  const float a20 = in->mat[2][0], a21 = in->mat[2][1], a22 = in->mat[2][2], a23 = in->mat[2][3];
+  const float a30 = in->mat[3][0], a31 = in->mat[3][1], a32 = in->mat[3][2], a33 = in->mat[3][3];
+
+  out->mat[0][0] = a00;
+  out->mat[0][1] = a10;
+  out->mat[0][2] = a20;
+  out->mat[0][3] = a30;
+
+  out->mat[1][0] = a01;
+  out->mat[1][1] = a11;
+  out->mat[1][2] = a21;
+  out->mat[1][3] = a31;
+
+  out->mat[2][0] = a02;
+  out->mat[2][1] = a12;
+  out->mat[2][2] = a22;
+  out->mat[2][3] = a32;
+
+  out->mat[3][0] = a03;
+  out->mat[3][1] = a13;
+  out->mat[3][2] = a23;
+  out->mat[3][3] = a33;
+}
+
 void mat4f_multiply(const Mat4f* const restrict first, const Mat4f* const restrict second, Mat4f* const restrict out) {
   const float a00 = first->mat[0][0], a01 = first->mat[0][1], a02 = first->mat[0][2], a03 = first->mat[0][3];
   const float a10 = first->mat[1][0], a11 = first->mat[1][1], a12 = first->mat[1][2], a13 = first->mat[1][3];

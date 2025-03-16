@@ -6,11 +6,14 @@
 #include "vec3f.h"
 #include "ppm.h"
 #include "mesh.h"
+#include "transform.h"
 
+// TODO Add caching mechanism for view matrix and projection matrix
 typedef struct {
-  Vec3f position;
+  Transform transform;
+  Mat4f proj;
+  Mat4f view;
   Vec3f up;
-  Vec3f target;
   float fov;
 } Camera;
 
@@ -20,7 +23,9 @@ typedef struct {
 /// @param target
 /// @param fov
 /// @return
-Camera init_camera(Vec3f position, Vec3f up, Vec3f target, float fov);
+Camera init_camera(Vec3f position, Vec4f quaternion, Vec3f up, float fov);
+
+void look_at(Camera* restrict cam, const Vec3f* target);
 
 /// TODO rafcator into smaller function for clarity
 /// TODO document this

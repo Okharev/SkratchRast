@@ -1,5 +1,6 @@
 #include "camera.h"
 
+#include "quaternion.h"
 #include "helpers.h"
 #include "mat4f.h"
 #include "mesh.h"
@@ -45,14 +46,22 @@ static void compute_mvp(const Camera* const restrict cam, Mat4f* const restrict 
     mat4f_multiply(&vp, &world_mesh_space, mvp);
 }
 
-Camera init_camera(const Vec3f position, const Vec3f up, const Vec3f target, const float fov) {
-    Camera cam;
-    cam.fov = fov;
-    cam.position = position;
-    cam.target = target;
-    cam.up = up;
+Camera init_camera(const Vec3f position, const Vec4f quaternion, const Vec3f up, const float fov) {
+  Camera cam;
+  cam.fov = fov;
+  cam.transform.is_dirty = true;
+  cam.transform.scale = (Vec3f) { 1.0f, 1.0f, 1.0f };
+  cam.transform.position = position;
+  cam.transform.quaternion = quaternion;
+  cam.up = up;
 
-    return cam;
+  return cam;
+}
+
+void look_at(Camera* restrict cam, const Vec3f* restrict target) {
+  const Vec4f look_at_quat = quat_look_at(&cam->transform.position, target, &cam->up);
+
+  set_rotation(&look_at_quat, &cam->transform);
 }
 
 void render_mesh(SDL_Renderer* const restrict renderer, const Camera* const restrict cam, const Mesh* const restrict mesh) {

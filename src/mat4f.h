@@ -12,6 +12,7 @@ typedef struct {
 DYN_ARR_TYPE(Mat4f, Mat4f);
 
 Mat4f mat4f_identity();
+void mat4f_transpose(const Mat4f* restrict in, Mat4f* restrict out);
 void mat4f_multiply(const Mat4f* restrict first, const Mat4f* restrict second, Mat4f* restrict out);
 void mat4f_multiply_vec4f(const Vec4f* restrict in, Vec4f* restrict out, const Mat4f* restrict mat);
 void mat4f_multiply_vec3f(const Vec3f* restrict in, Vec3f* restrict out, const Mat4f* restrict mat);

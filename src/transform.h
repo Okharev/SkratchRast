@@ -4,16 +4,16 @@
 #include "mat4f.h"
 
 typedef struct {
-    Vec3f position;
-    Vec3f quaternion;
-    Vec3f scale;
-
     Mat4f SRT_mat;
-    bool is_dirty;
+    Vec4f quaternion;
+    Vec3f scale;
+    Vec3f position;
+
+    unsigned is_dirty : 1;
 } Transform;
 
 void set_position(const Vec3f* restrict new_position, Transform* restrict transform);
-void set_rotation(const Vec3f* restrict new_rotation, Transform* restrict transform);
+void set_rotation(const Vec4f* restrict new_rotation, Transform* restrict transform);
 void set_scale(const Vec3f* restrict new_scale, Transform* restrict transform);
 const Mat4f* get_srt(Transform* restrict transform);
 
