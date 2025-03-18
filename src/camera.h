@@ -11,30 +11,27 @@
 // TODO Add caching mechanism for view matrix and projection matrix
 typedef struct {
   Transform transform;
-  Mat4f proj;
-  Mat4f view;
+  bool proj_dirty;
+  bool view_dirty;
+  Mat4f cache_proj;
+  Mat4f cache_view;
   Vec3f up;
   float fov;
+  float near;
+  float far;
+  float aspect_ratio;
 } Camera;
 
-///
-/// @param position
-/// @param up
-/// @param target
-/// @param fov
-/// @return
-Camera init_camera(Vec3f position, Vec4f quaternion, Vec3f up, float fov);
+typedef struct {
+  Mesh* mesh;
+  Transform transform;
+} Entity;
 
-void look_at(Camera* restrict cam, const Vec3f* target);
-
-/// TODO rafcator into smaller function for clarity
-/// TODO document this
-/// TODO Add Edges drawing
-/// TODO Add Faces drawing
-/// TODO Add simple shading
-/// @param renderer
-/// @param cam
-/// @param mesh
-void render_mesh(SDL_Renderer* restrict renderer, const Camera* restrict cam, const Mesh* restrict mesh);
+Camera init_camera(Vec3f position, Vec4f quaternion, Vec3f up, float fov, float near, float far, float aspect_ratio);
+Mat4f* get_view(Camera* restrict cam);
+Mat4f* get_proj(Camera* restrict cam);
+void move_camera(Camera* restrict cam, const Vec3f* restrict move);
+void camera_look_at(Camera* restrict cam, Vec3f* restrict restrict target);
+void render_mesh(SDL_Renderer* restrict renderer, Camera* restrict cam, Entity* restrict entity);
 
 #endif //CAMERA_H

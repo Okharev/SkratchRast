@@ -3,6 +3,7 @@
 #include "src/mesh.h"
 #include "src/memory/arena_allocator.h"
 #include "src/camera.h"
+#include "src/quaternion.c"
 
 #include <SDL3/SDL.h>
 
@@ -29,12 +30,25 @@ int main(void) {
   uint8_t* restrict mem_buff = malloc(size);
   Arena level_arena = arena_init(mem_buff, size);
 
-  const Mesh* mesh = mesh_from_obj(&level_arena, "../../assets/teapot.obj");
+  Entity entity = (Entity) {
+    .mesh = mesh_from_obj(&level_arena, "../../assets/teapot.obj"),
+    .transform = (Transform){
+      .SRT_mat = mat4f_identity(),
+      .quaternion = quat_look_at(&(Vec3f){.x = 0.0f, .y = 0.0f, .z = 0.0f }, &(Vec3f){.x = 0.0f, .y = 0.0f, .z = 1.0f }, &(Vec3f) { .x = 0.0f, .y = 1.0f, .z = 0.0f }),
+      .scale = (Vec3f){.x = 1.0f, .y = 1.0f, .z = 1.0f},
+      .position = (Vec3f){.x = 0.0f, .y = 0.0f, .z = 0.0f },
+      .is_dirty = true
+    }
+  };
+
   Camera cam = init_camera(
-    (Vec3f){.x = 0.0f, .y = 0.0f, .z = 0.0f },
+    (Vec3f){.x = 1.0f, .y = 1.0f, .z = 1.0f },
+    quat_look_at(&(Vec3f){.x = 1.0f, .y = 1.0f, .z = 1.0f }, &(Vec3f){.x = 0.0f, .y = 0.0f, .z = 0.0f }, &(Vec3f) { .x = 0.0f, .y = 1.0f, .z = 0.0f }),
     (Vec3f) { .x = 0.0f, .y = 1.0f, .z = 0.0f },
-    (Vec3f) { .x = 0.0f, .y = 0.0f, .z = -1.0f },
-    40.0f
+    40.0f,
+    0.0001f,
+    10000.0f,
+    16.0f / 9.0f
   );
 
   while (true) {
@@ -52,16 +66,13 @@ int main(void) {
     SDL_RenderClear(renderer);
 
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    render_mesh(renderer, &cam, mesh);
+    render_mesh(renderer, &cam, &entity);
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
 
     SDL_RenderPresent(renderer);
 
     SDL_UpdateWindowSurface(window);
 
-    cam.position.y += 0.00001f;
-    cam.position.x += 0.00001f;
-    cam.position.z += 0.00001f;
   }
 
   return 0;

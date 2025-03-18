@@ -22,7 +22,7 @@ Mat4f mat4f_rotateZ(float angle);
 // Mat4f mat4f_rotateXYZ(Vec3f* restrict eulers);
 Mat4f mat4f_scaling(const Vec3f* restrict scaling);
 Mat4f mat4f_translate(const Vec3f* restrict translation);
-Mat4f mat4f_look_at(const Vec3f* restrict target);
+Mat4f mat4f_look_at(const Vec3f* restrict eye, const Vec3f* restrict target, const Vec3f* restrict up);
 Mat4f mat4f_projection(float fov, float aspect, float near, float far);
 
 void mat4f_print(const Mat4f* restrict m);

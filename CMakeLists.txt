@@ -19,7 +19,7 @@ add_executable(TinyRaster main.c src/ppm.c src/memory/arena_allocator.c src/memo
         src/camera.h
         src/mesh.c
         src/mesh.h
-        src/quaternion.h)
+        src/quaternion.c)
 target_link_libraries(TinyRaster m SDL3::SDL3)
 
 

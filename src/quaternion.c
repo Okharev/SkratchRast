@@ -1,7 +1,8 @@
+#ifndef QUATERNION_H
+#define QUATERNION_H
 #include <math.h>
 
 #include "mat4f.h"
-
 
 Vec4f mat4f_to_quat(const Mat4f* const restrict rotation) {
   Vec4f q;
@@ -12,7 +13,7 @@ Vec4f mat4f_to_quat(const Mat4f* const restrict rotation) {
     q.x = (rotation->mat[2][1] - rotation->mat[1][2]) / s;
     q.y = (rotation->mat[0][2] - rotation->mat[2][0]) / s;
     q.z = (rotation->mat[1][0] - rotation->mat[0][1]) / s;
-  } else if ((rotation->mat[0][0] > rotation->mat[1][1]) && (rotation->mat[0][0] > rotation->mat[2][2])) {
+  } else if (rotation->mat[0][0] > rotation->mat[1][1] && rotation->mat[0][0] > rotation->mat[2][2]) {
     const float s = sqrtf(1.0f + rotation->mat[0][0] - rotation->mat[1][1] - rotation->mat[2][2]) * 2.0f;
     q.w = (rotation->mat[2][1] - rotation->mat[1][2]) / s;
     q.x = 0.25f * s;
@@ -35,7 +36,7 @@ Vec4f mat4f_to_quat(const Mat4f* const restrict rotation) {
 }
 
 
-Vec4f quat_look_at(const Vec3f* const restrict origin, const Vec3f* const restrict target, const Vec3f* const restrict up) {
+inline Vec4f quat_look_at(const Vec3f* const restrict origin, const Vec3f* const restrict target, const Vec3f* const restrict up) {
   const Vec3f subbed    = vec3f_substract(target, origin);
   const Vec3f forward   = vec3f_normalize(&subbed);
   const Vec3f normalized = vec3f_cross(up, &forward);
@@ -95,3 +96,4 @@ Mat4f quat_to_mat4f(const Vec4f* const restrict q) {
 
   return m;
 }
+#endif // QUATERNION_H

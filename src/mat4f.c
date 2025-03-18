@@ -243,8 +243,27 @@ Mat4f mat4f_translate(const Vec3f* restrict const translation) {
   return m;
 }
 
-Mat4f mat4f_look_at(const Vec3f* restrict target) {
+Mat4f mat4f_look_at(const Vec3f* restrict eye, const Vec3f* restrict target, const Vec3f* restrict up) {
+  const Vec3f subbed    = vec3f_substract(target, eye);
+  const Vec3f forward   = vec3f_normalize(&subbed);
+  const Vec3f normalized = vec3f_cross(up, &forward);
+  const Vec3f right     = vec3f_normalize(&normalized);
+  const Vec3f corrected = vec3f_cross(&right, &forward);
 
+  const Mat4f view = (Mat4f){
+    .mat = {
+      {right.x,    right.y,    right.z,    0.0f},
+      {corrected.x,corrected.y,corrected.z,0.0f},
+      {-forward.x, -forward.y, -forward.z, 0.0f},
+      {0.0f,       0.0f,       0.0f,       1.0f}
+    }
+  };
+
+  const Mat4f translate = mat4f_translate(&(Vec3f){.x = -eye->x, .y = -eye->y, .z = -eye->z});
+  Mat4f viewTranslate;
+  mat4f_multiply(&view, &translate, &viewTranslate);
+
+  return viewTranslate;
 }
 
 Mat4f mat4f_projection(const float fov, const float aspect, const float near, const float far) {
