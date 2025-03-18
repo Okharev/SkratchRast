@@ -2,4 +2,3 @@
 
 #include "helpers.h"
 #include "obj_reader.h"
-
