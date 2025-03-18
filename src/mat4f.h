@@ -6,7 +6,7 @@
 #include "quaternion.h"
 
 typedef struct Mat4f {
-    alignas (16) float mat[4][4];
+    float mat[4][4];
 } Mat4f;
 
 DYN_ARR_TYPE(Mat4f, Mat4f);

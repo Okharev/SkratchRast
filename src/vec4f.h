@@ -5,12 +5,12 @@
 #include <stdint.h>
 
 typedef union {
-    alignas(16) struct {
+    struct {
         // Named struct for direct access
         float x, y, z, w;
     };
 
-    alignas(16) float v[4]; // Array representation
+    float v[4]; // Array representation
 } Vec4f;
 
 void vec4f_translate_inplace(Vec4f *restrict origin, const Vec4f *restrict offset);

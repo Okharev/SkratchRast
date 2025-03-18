@@ -74,7 +74,7 @@ void camera_look_at(Camera *cam, Vec3f *target) {
     }
 }
 
-void render_mesh(SDL_Renderer *const restrict renderer, Camera *restrict cam, Entity* restrict entity) {
+void render_mesh(SDL_Renderer *const restrict renderer, Camera *restrict cam, Entity *restrict entity) {
     const Mesh *restrict const mesh = entity->mesh;
     Mat4f mvp;
     const Mat4f *entity_trs = get_trs(&entity->transform);
@@ -85,7 +85,7 @@ void render_mesh(SDL_Renderer *const restrict renderer, Camera *restrict cam, En
 
     SDL_Rect dim;
     SDL_GetRenderViewport(renderer, &dim);
-    SDL_FPoint screen_points[mesh->vertices_count] = {};
+    SDL_FPoint screen_points[mesh->vertices_count];
     for (uint32_t i = 0; i < mesh->vertices_count; ++i) {
         Vec4f out;
         mat4f_multiply_vec4f(&(Vec4f){
@@ -103,8 +103,8 @@ void render_mesh(SDL_Renderer *const restrict renderer, Camera *restrict cam, En
             continue;
 
         screen_points[i] = (SDL_FPoint){
-            .x = ((ndc.x + 1.0f) * 0.5f * (float)dim.w),
-            .y = ((1.0f - ndc.y) * 0.5f * (float)dim.h)
+            .x = ((ndc.x + 1.0f) * 0.5f * (float) dim.w),
+            .y = ((1.0f - ndc.y) * 0.5f * (float) dim.h)
         };
     }
 

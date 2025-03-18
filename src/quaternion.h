@@ -6,12 +6,12 @@
 typedef struct Mat4f Mat4f;
 
 typedef union Quaternion {
-    alignas (16) struct {
+    struct {
         // Named struct for direct access
         float x, y, z, w;
     };
 
-    alignas (16) float v[4]; // Array representation
+    float v[4]; // Array representation
 } Quaternion;
 
 

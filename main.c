@@ -31,7 +31,7 @@ int main(void) {
   Arena level_arena = arena_init(mem_buff, size);
 
   Entity entity = (Entity) {
-    .mesh = mesh_from_obj(&level_arena, "../../assets/ak47.obj"),
+    .mesh = mesh_from_obj(&level_arena, "../../assets/teapot.obj"),
     .transform = (Transform){
       .SRT_mat = mat4f_identity(),
       .quaternion = quat_look_at(&(Vec3f){.x = 0.0f, .y = 0.0f, .z = 0.0f }, &(Vec3f){.x = 0.0f, .y = 0.0f, .z = 1.0f }, &(Vec3f) { .x = 0.0f, .y = 1.0f, .z = 0.0f }),
@@ -72,7 +72,7 @@ int main(void) {
     SDL_RenderPresent(renderer);
 
     SDL_UpdateWindowSurface(window);
-    const Vec3f new_pos = (Vec3f) { .x = cam.transform.position.x + 0.001f, .y = cam.transform.position.y + 0.001f, .z = cam.transform.position.z + 0.001f };
+    const Vec3f new_pos = (Vec3f) { .x = cam.transform.position.x + 0.00001f, .y = cam.transform.position.y + 0.00001f, .z = cam.transform.position.z + 0.00001f };
     move_camera(&cam, &new_pos);
 
   }
